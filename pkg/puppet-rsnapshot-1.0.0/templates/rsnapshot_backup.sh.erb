@@ -1,0 +1,12 @@
+#!/bin/bash
+
+## Enumerate all config files to iterate over
+ls -l <%= @server_config_path %>/*.conf | awk {'print $9'} > <%= @script_path %>/.rsnapshot
+
+## Run backups 1 config file at a time
+while read config; do
+  rsnapshot -c $config $1
+done <<%= @script_path %>/.rsnapshot
+
+## Remove the list of config files
+rm -f <%= @script_path %>/.rsnapshot
