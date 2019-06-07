@@ -1,0 +1,105 @@
+#
+# THIS FILE IS MANAGED BY PUPPET AND ANY CHANGES WILL BE REVERTED
+#
+#################################################
+# rsnapshot.conf - rsnapshot configuration file #
+#################################################
+#                                               #
+# PLEASE BE AWARE OF THE FOLLOWING RULES:       #
+#                                               #
+# This file requires tabs between elements      #
+#                                               #
+# Directories require a trailing slash:         #
+#   right: /home/                               #
+#   wrong: /home                                #
+#                                               #
+#################################################
+
+#######################
+# CONFIG FILE VERSION #
+#######################
+
+config_version	1.2
+
+###########################
+# SNAPSHOT ROOT DIRECTORY #
+###########################
+
+# All snapshots will be stored under this root directory.
+snapshot_root	<%= @snapshot_root %>/
+
+#################################
+# EXTERNAL PROGRAM DEPENDENCIES #
+#################################
+
+<% @programs.each do |program,directory| -%>
+  <%- if directory and directory.to_s != 'undef' -%>
+<%= program %>	<%= directory %>
+  <%- end -%>
+<% end -%>
+
+###########
+# OPTIONS #
+###########
+
+<% @options.each do |option,value| -%>
+  <%- if value and value.to_s != 'undef' -%>
+<%= option %>	<%= value %>
+  <%- end -%>
+<% end -%>
+
+#########################################
+#           BACKUP INTERVALS            #
+# Must be unique and in ascending order #
+# i.e. hourly, daily, weekly, monthly.  #
+#########################################
+
+<% if @retain_hourly.to_i > 0 -%>
+retain		hourly	<%= @retain_hourly %>
+<% end -%>
+<% if @retain_daily.to_i > 0 -%>
+retain		daily	<%= @retain_daily %>
+<% end -%>
+<% if @retain_weekly.to_i > 0 -%>
+retain		weekly	<%= @retain_weekly %>
+<% end -%>
+<% if @retain_monthly.to_i > 0 -%>
+retain		monthly	<%= @retain_monthly %>
+<% end -%>
+
+
+##############################
+### INCLUDE / EXCUDE FILES ###
+##############################
+
+<% @includes.each do |value| -%>
+  <%- if value.to_s != 'undef' -%>
+include	<%= value %>
+  <%- end -%>
+<% end -%>
+
+<% @excludes.each do |value| -%>
+  <%- if value.to_s != 'undef' -%>
+exclude	<%= value %>
+  <%- end -%>
+<% end -%>
+
+<% @include_files.each do |value| -%>
+  <%- if value.to_s != 'undef' -%>
+include	<%= value %>
+  <%- end -%>
+<% end -%>
+
+<% @exclude_files.each do |value| -%>
+  <%- if value.to_s != 'undef' -%>
+exclude	<%= value %>
+  <%- end -%>
+<% end -%>
+
+###############################
+### BACKUP POINTS / SCRIPTS ###
+###############################
+
+<% @directories.each do |source_dir| -%>
+backup	<%= @client_user %>@<%= @fqdn %>:<%= source_dir.gsub(/\/$/, '') %>/<%= "\t" %><%= "\t\t." %>
+<% end -%>

@@ -1,0 +1,37 @@
+{
+  "name": "Veeps-Hosting/puppet-rsnapshot",
+  "version": "1.0.0",
+  "author": "grant-veepshosting",
+  "summary": "Secure and easy backups with rsnapshot.",
+  "tags": [
+    "rsnapshot",
+    "backups"
+  ],
+  "license": "MIT",
+  "source": "https://github.com/Veeps-Hosting/puppet-rsnapshot",
+  "project_page": "https://github.com/Veeps-Hosting/puppet-rsnapshot",
+  "dependencies": [
+    {
+      "name": "puppetlabs/concat",
+      "version_requirement": ">= 3.0.0 <= 6.0.0"
+    },
+    {
+      "name": "jtopjian/sshkeys",
+      "version_requirement": "< 3.0.0"
+    },
+    {
+      "name": "saz/sudo",
+      "version_requirement": "<= 6.0.0"
+    },
+    {
+      "name": "saz/ssh",
+      "version_requirement": ">= 2.3.0 < 6.0.0"
+    }
+  ],
+  "operatingsystem_support": [
+    { "operatingsystem": "Debian", "operatingsystemrelease": ["8", "9"]},
+    { "operatingsystem": "Fedora", "operatingsystemrelease": ["29"]},
+    { "operatingsystem": "RedHat", "operatingsystemrelease": ["7.0"]},
+    { "operatingsystem": "Ubuntu", "operatingsystemrelease": ["16.04", "18.04"]}
+  ]
+}
