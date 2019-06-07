@@ -46,11 +46,11 @@ utilizing common Puppet patterns.
 
 * **Fully automatic client/server deployment with sensible defaults.**  The only required parameter is to tell the client which server to backup to.
 
-* **Support all recent mainstream Operating Systems and Puppet Client.** Latest Debian, Ubuntu, CentOS and Fedora and Puppet 6+
+* **Support all recent mainstream Operating Systems and Puppet Client.** Latest Debian, Ubuntu, CentOS and Fedora using Puppet 5+
 
 * **Ability to run pre and post commands.** Credit to 'https://github.com/twc-openstack/puppet-rsnapshot' for the contribution, allowing 'pre' and 'post' commands to be run, for example a database backup.
 
-* **Automatic creation of root SSH key if it doesn't exist.** 
+* **Automatic creation of root SSH key if it doesn't exist.**
 
 * **CRON Tasks run contiguously, one after the other, to facilitate a true 'backup window'** Defaults to 10pm nightly, Sunday 10am for weekly and the first of the month at 8am for monthly.
 
