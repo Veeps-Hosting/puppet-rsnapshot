@@ -26,9 +26,20 @@
 
 ## Overview
 
-This module manages backups using rsnapshot.
+This module manages backups using rsnapshot automatically.
 
 ## Module Description
+
+This module is a fork of tedivm/rsnapshot, and has many enhancements, including:
+* Puppet 6+ Compatable
+* Tested on all major/modern Debian and Red Hat derivatives
+* Fully automatic, including root user SSH key generation
+* 1 parameter required for clients: backup server FQDN
+* Pre/Post Commands (credit: https://github.com/tedivm/puppet-rsnapshot/compare/master...twc-openstack:master)
+* CRON redesigned to run from first to last server continuously during the backup window
+* Sane defaults: 10pm nightly, 10am Sunday weekly, and 8am on the first of the Monthly
+
+Working Puppet Master and PuppetDB assumed for all automated functionality.
 
 > rsnapshot is a filesystem snapshot utility based on rsync. rsnapshot makes it
 easy to make periodic snapshots of local machines, and remote machines over ssh.
@@ -44,15 +55,19 @@ utilizing common Puppet patterns.
 
 ## Differences between this and other modules.
 
-* **Fully automatic client/server deployment with sensible defaults.**  The only required parameter is to tell the client which server to backup to.
+* **Fully automatic client/server deployment with sensible defaults.**
+The only required parameter is to tell the client which server to backup to.
 
-* **Support all recent mainstream Operating Systems and Puppet Client.** Latest Debian, Ubuntu, CentOS and Fedora using Puppet 5+
+* **Support all recent mainstream Operating Systems and Puppet Client.**
+Latest Debian, Ubuntu, CentOS and Fedora using Puppet 5+
 
-* **Ability to run pre and post commands.** Credit to 'https://github.com/twc-openstack/puppet-rsnapshot' for the contribution, allowing 'pre' and 'post' commands to be run, for example a database backup.
+* **Ability to run pre and post commands.**
+Credit to 'https://github.com/twc-openstack/puppet-rsnapshot' for the contribution, allowing 'pre' and 'post' commands to be run.
 
 * **Automatic creation of root SSH key if it doesn't exist.**
 
-* **CRON Tasks run contiguously, one after the other, to facilitate a true 'backup window'** Defaults to 10pm nightly, Sunday 10am for weekly and the first of the month at 8am for monthly.
+* **CRON Tasks run contiguously, one after the other, to facilitate a true 'backup window'**
+Defaults to 10pm nightly, Sunday 10am for weekly and the first of the month at 8am for monthly.
 
 * **Support for SSH without root access.** In most cases root login is not
   available over ssh for security reasons, so this module relies instead on
@@ -60,7 +75,8 @@ utilizing common Puppet patterns.
   access to perform backups.
 
 * **Support for automatic key sharing.** The client machine will automatically
-  receive the ssh key from the server and user that it is backing up to. Leveraging the 'saz-ssh' module with default 'storeconfigs' enabled.
+  receive the ssh key from the server and user that it is backing up to.
+  Leveraging the 'saz-ssh' module with default 'storeconfigs' enabled.
 
 * **Locked down ssh accounts.** All ssh accounts are locked down. SSH keys can
   only by used by the single backup host, without access to unneeded features
@@ -80,7 +96,7 @@ utilizing common Puppet patterns.
 * Installs rsync and rsnapshot on server machine.
 * Installs rsync on client machine.
 * Creates rsnapshot configuration files for each client on the server machine.
-* Creates cron jobs for each client backup job.
+* Creates CRON jobs for each backup routine (hourly, daily, weekly, monthly).
 * Installs wrapper scripts on the client machine to improve security.
 * Creates directory for storing backups on the server.
 * Creates an ssh key pair on the server if needed.
@@ -154,7 +170,7 @@ it's parameters to build the client specific configuration.
 
 This class has 1 required parameter- the backup `server`, which should be an
 fqdn, and an optional parameter for an array of `directories` to back up. Additional options, such as
-retain rules or cronjob times, can be overridden as needed.
+retain rules can be overridden as needed.
 
 When the retain values are set to zero, no cron entry for that specific
 period is created.
@@ -167,21 +183,21 @@ class { 'rsnapshot::client':
     '/home',
     '/root'
   ],
-  user                => 'backshots',
+  user                => 'rsnapshot',
   remote_user         => 'root',
-  backup_hourly_cron  => '*/2',
-  backup_time_minute  => fqdn_rand(59, 'rsnapshot_minute'),
-  backup_time_hour    => fqdn_rand(23, 'rsnapshot_hour'),
-  backup_time_weekday => 6,
-  backup_time_dom     => 15,
+  backup_hourly_cron  => '0',
+  backup_time_minute  => '0',
+  backup_time_hour    => '10',
+  backup_time_weekday => 0,
+  backup_time_dom     => 1,
   cmd_preexec         => undef,
   cmd_postexec        => undef,
   cmd_client_rsync    => '/usr/bin/rsync',
   cmd_client_sudo     => '/usr/bin/sudo',
-  retain_hourly       => 6,
-  retain_daily        => 7,
-  retain_weekly       => 4,
-  retain_monthly      => 3,
+  retain_hourly       => 0,
+  retain_daily        => 14,
+  retain_weekly       => 8,
+  retain_monthly      => 2,
   one_fs              => undef,
   rsync_short_args    => '-a',
   rsync_long_args     => '--delete --numeric-ids --relative --delete-excluded'
@@ -239,7 +255,21 @@ class profiles::puppetmaster {
 * `rsnapshot::server::backup_config`: Gets thrown and collected by the backup
    and config types.
 
-## Development
 
-Contributions are always welcome. Please read the [Contributing Guide](CONTRIBUTING.md)
-to get started.
+## Bugs & New Features
+
+If you happen to stumble upon a bug, please feel free to create a pull request
+with a fix (optionally with a test), and a description of the bug and how it
+was resolved.
+
+Or if you're not into coding, simply create an issue adding steps to let us
+reproduce the bug and we will happily fix it.
+
+If you have a good idea for a feature or how to improve this module in general,
+please create an issue to discuss it. We are very open to feedback. Pull
+requests are always welcome.
+
+## License
+The project is released under the permissive MIT license.
+
+The source can be found at [github.com/Veeps-Hosting/puppet-rsnapshot](https://github.com/Veeps-Hosting/puppet-rsnapshot/).

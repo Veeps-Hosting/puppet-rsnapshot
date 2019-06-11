@@ -1,6 +1,6 @@
 {
   "name": "veepshosting-rsnapshot",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "grant-veepshosting",
   "summary": "Secure and easy backups with rsnapshot.",
   "tags": [
