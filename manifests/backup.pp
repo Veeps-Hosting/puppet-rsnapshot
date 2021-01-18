@@ -1,3 +1,4 @@
+# This class defines the rsnapshot::backup
 define rsnapshot::backup (
   $source_path,
   $host   = $::fqdn,

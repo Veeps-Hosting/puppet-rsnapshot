@@ -1,10 +1,11 @@
+# Defines rsnapshot::server::backup_config
 define rsnapshot::server::backup_config (
-  $client_user = $rsnapshot::params::client_backup_user,
   $config_file,
   $host,
-  $options = {},
   $server,
   $source_path,
+  $client_user = $rsnapshot::params::client_backup_user,
+  $options = {},
 ){
   assert_private()
   concat::fragment { "${config_file}_entry_${source_path}" :

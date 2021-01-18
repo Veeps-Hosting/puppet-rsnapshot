@@ -1,3 +1,4 @@
+# Defines rsnapshot::server::config
 define rsnapshot::server::config (
   $backup_hourly_cron     = $rsnapshot::params::backup_hourly_cron,
   $backup_path            = $rsnapshot::params::server_backup_path,

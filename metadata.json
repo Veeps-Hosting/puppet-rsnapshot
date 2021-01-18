@@ -1,37 +1,69 @@
 {
   "name": "veepshosting-rsnapshot",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "author": "grant-veepshosting",
   "summary": "Secure and easy backups with rsnapshot.",
-  "tags": [
-    "rsnapshot",
-    "backups"
-  ],
   "license": "MIT",
   "source": "https://github.com/Veeps-Hosting/puppet-rsnapshot",
   "project_page": "https://github.com/Veeps-Hosting/puppet-rsnapshot",
   "dependencies": [
     {
       "name": "puppetlabs/concat",
-      "version_requirement": ">= 3.0.0 <= 6.0.0"
+      "version_requirement": ">= 3.0.0 <= 9.9.9"
     },
     {
       "name": "jtopjian/sshkeys",
-      "version_requirement": "< 3.0.0"
+      "version_requirement": ">= 2.1.0 <= 9.9.9"
     },
     {
       "name": "saz/sudo",
-      "version_requirement": "<= 6.0.0"
+      "version_requirement": ">= 6.0.0 <= 9.9.9"
     },
     {
       "name": "saz/ssh",
-      "version_requirement": ">= 2.3.0 < 6.0.0"
+      "version_requirement": ">= 2.3.0  <= 9.9.9"
     }
   ],
   "operatingsystem_support": [
-    { "operatingsystem": "Debian", "operatingsystemrelease": ["8", "9"]},
-    { "operatingsystem": "Fedora", "operatingsystemrelease": ["29"]},
-    { "operatingsystem": "RedHat", "operatingsystemrelease": ["7.0"]},
-    { "operatingsystem": "Ubuntu", "operatingsystemrelease": ["16.04", "18.04"]}
-  ]
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "8",
+        "9"
+      ]
+    },
+    {
+      "operatingsystem": "Fedora",
+      "operatingsystemrelease": [
+        "29"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7.0"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "16.04",
+        "18.04",
+        "20.04"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 4.10.0"
+    }
+  ],
+  "tags": [
+    "rsnapshot",
+    "backups"
+  ],
+  "pdk-version": "1.18.1",
+  "template-url": "pdk-default#1.18.1",
+  "template-ref": "tags/1.18.1-0-g3d2e75c"
 }

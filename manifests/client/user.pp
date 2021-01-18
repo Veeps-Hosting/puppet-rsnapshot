@@ -1,3 +1,4 @@
+# Defined class rsnapshot::client::user
 class rsnapshot::client::user (
   $client_user          = '',
   $push_ssh_key         = true,
@@ -21,8 +22,8 @@ class rsnapshot::client::user (
 
   # Setup Group
   group { $client_user :
-    before => User[$client_user],
     ensure => present,
+    before => User[$client_user],
   }
 
   # Setup User

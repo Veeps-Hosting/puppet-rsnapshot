@@ -5,6 +5,7 @@
 #  server         => lookup('rsnapshot_server'),
 #}
 class rsnapshot::client (
+  $server,
   $backup_hourly_cron   = $rsnapshot::params::backup_hourly_cron,
   $backup_time_dom      = $rsnapshot::params::backup_time_dom,
   $backup_time_hour     = $rsnapshot::params::backup_time_hour,
@@ -30,7 +31,6 @@ class rsnapshot::client (
   $retain_weekly        = $rsnapshot::params::retain_weekly,
   $rsync_long_args      = $rsnapshot::params::rsync_long_args,
   $rsync_short_args     = $rsnapshot::params::rsync_short_args,
-  $server,
   $server_user          = $rsnapshot::params::server_user,
   $setup_sudo           = $rsnapshot::params::setup_sudo,
   $ssh_args             = $rsnapshot::params::ssh_args,

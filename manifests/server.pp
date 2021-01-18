@@ -22,9 +22,9 @@ class rsnapshot::server(
 
   # Auto create root 4096 bit SSH RSA key pair if it doesn't exist
   exec { 'create root ssh key pair':
-    command     => 'ssh-keygen -b 4096 -t rsa -f /root/.ssh/id_rsa -q -N ""',
-    creates     => ['/root/.ssh/id_rsa','/root/.ssh/id_rsa.pub'],
-    path        => $::path,
+    command => 'ssh-keygen -b 4096 -t rsa -f /root/.ssh/id_rsa -q -N ""',
+    creates => ['/root/.ssh/id_rsa','/root/.ssh/id_rsa.pub'],
+    path    => $::path,
   }
 
   $rsnapshot_logrotate = @(EOF)
@@ -37,9 +37,9 @@ class rsnapshot::server(
   | EOF
 
   file { '/etc/logrotate.d/rsnapshot':
+    ensure  => present,
     backup  => false,
     content => inline_template($rsnapshot_logrotate),
-    ensure  => present,
     group   => root,
     owner   => root,
     replace => true,

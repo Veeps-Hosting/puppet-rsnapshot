@@ -1,3 +1,4 @@
+# Class rsnapshot::server::cron_script
 class rsnapshot::server::cron_script (
   $backup_hourly_cron  = $rsnapshot::params::backup_hourly_cron,
   $backup_time_minute  = $rsnapshot::params::backup_time_minute,
@@ -13,7 +14,7 @@ class rsnapshot::server::cron_script (
   $server_user         = $rsnapshot::params::server_user,
 ) inherits rsnapshot::params {
   assert_private()
-  
+
   file { $script_path:
     ensure => directory,
     group  => root,
@@ -21,9 +22,9 @@ class rsnapshot::server::cron_script (
     owner  => root,
   }
 
-  file { "$script_path/rsnapshot_backup.sh":
-    content => template('rsnapshot/rsnapshot_backup.sh.erb'),
+  file { "${script_path}/rsnapshot_backup.sh":
     ensure  => present,
+    content => template('rsnapshot/rsnapshot_backup.sh.erb'),
     group   => root,
     mode    => '0544',
     owner   => root,
