@@ -6,6 +6,7 @@
   "license": "MIT",
   "source": "https://github.com/Veeps-Hosting/puppet-rsnapshot",
   "project_page": "https://github.com/Veeps-Hosting/puppet-rsnapshot",
+  "issues_url": "https://github.com/Veeps-Hosting/puppet-rsnapshot/issues",
   "dependencies": [
     {
       "name": "puppetlabs/concat",
