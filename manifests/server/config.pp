@@ -1,4 +1,3 @@
-# Defines rsnapshot::server::config
 define rsnapshot::server::config (
   $backup_hourly_cron     = $rsnapshot::params::backup_hourly_cron,
   $backup_path            = $rsnapshot::params::server_backup_path,
@@ -30,6 +29,7 @@ define rsnapshot::server::config (
   $rsync_long_args        = $rsnapshot::params::rsync_long_args,
   $rsync_numtries         = $rsnapshot::params::rsync_numtries,
   $rsync_short_args       = $rsnapshot::params::rsync_short_args,
+  $rsync_wrapper          = true,
   $server                 = $::fqdn,
   $server_user            = $rsnapshot::params::server_user,
   $ssh_args               = $rsnapshot::params::ssh_args,
@@ -68,7 +68,11 @@ define rsnapshot::server::config (
     $rsync_wrapper_processed = "--rsync-path=\"${wrapper_path_norm}/${wrapper_rsync_ssh}\""
   }
 
-  $rsync_long_args_final = strip("${ssh_args_processed} ${rsync_long_args} ${rsync_wrapper_processed}")
+  if($rsync_wrapper) {
+    $rsync_long_args_final = strip("${ssh_args_processed} ${rsync_long_args} ${rsync_wrapper_processed}")
+  } else {
+    $rsync_long_args_final = strip("${ssh_args_processed} ${rsync_long_args}")
+  }
 
   file { $snapshot_root :
     ensure  => directory,

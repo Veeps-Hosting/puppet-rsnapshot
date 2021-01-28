@@ -1,6 +1,12 @@
 # Changelog
-
 All notable changes to this project will be documented in this file.
+
+# Release 2.1.0
+* Added rsync_wrappers parameter, to support:
+* Added example Windows client profile class
+
+# Release 2.0.4
+* Minor bugfix to preserve hardlinks
 
 # Release 2.0.2
 * Module made PDK compatible
