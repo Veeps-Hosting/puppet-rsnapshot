@@ -5,6 +5,7 @@ class rsnapshot::server::cron_script (
   $backup_time_hour    = $rsnapshot::params::backup_time_hour,
   $backup_time_weekday = $rsnapshot::params::backup_time_weekday,
   $backup_time_dom     = $rsnapshot::params::backup_time_dom,
+  $backup_weekly_hour  = $rsnapshot::params::backup_weekly_hour,
   $retain_hourly       = $rsnapshot::params::retain_hourly,
   $retain_daily        = $rsnapshot::params::retain_daily,
   $retain_weekly       = $rsnapshot::params::retain_weekly,
@@ -31,14 +32,17 @@ class rsnapshot::server::cron_script (
     require => File[$script_path],
   }
 
-  if ($retain_hourly > 0) {
-    cron { rsnapshot-hourly :
-      command => '/etc/rsnapshot/scripts/rsnapshot_backup.sh hourly',
-      minute  => $backup_time_minute,
-      hour    => $backup_hourly_cron,
-      user    => $server_user,
+  if $retain_hourly != undef {
+    $backup_hourly_cron.each|$backup_hour|{
+      cron { "rsnapshot-hour-$backup_hour" :
+        command => '/etc/rsnapshot/scripts/rsnapshot_backup.sh hourly',
+        minute  => $backup_time_minute,
+        hour    => $backup_hour,
+        user    => $server_user,
+      }
     }
   }
+  cron {rsnapshot-hourly: ensure => absent}
 
   if ($retain_daily > 0) {
     cron { rsnapshot-daily :
@@ -52,7 +56,7 @@ class rsnapshot::server::cron_script (
   if ($retain_weekly > 0) {
     cron { rsnapshot-weekly :
       command => '/etc/rsnapshot/scripts/rsnapshot_backup.sh weekly',
-      hour    => ($backup_time_hour + 12) % 24,
+      hour    => $backup_weekly_hour,
       minute  => $backup_time_minute,
       user    => $server_user,
       weekday => $backup_time_weekday,

@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+# Release 2.1.2
+* Allow multiple values for "hourly" backups, once per day is not useful in the context it's intended
+* Weekly backup hour moved to a parameter
+
 # Release 2.1.0
 * Added rsync_wrappers parameter, to support:
 * Added example Windows client profile class
