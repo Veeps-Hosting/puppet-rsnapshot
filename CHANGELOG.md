@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+# Release 2.1.4
+* Merged change from contributor dmaes to fix the backup_point template (https://github.com/Veeps-Hosting/puppet-rsnapshot/commit/0ecd8ef49da314c1dc4728dae6833314daab0587)
+* Fixed variable 'log_level' with a default setting of 'warning'
+* Remove defunct and deprecated OS and Puppet versions / options
+
 # Release 2.1.2
 * Allow multiple values for "hourly" backups, once per day is not useful in the context it's intended
 * Weekly backup hour moved to a parameter

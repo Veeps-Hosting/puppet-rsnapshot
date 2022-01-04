@@ -13,7 +13,7 @@ class rsnapshot::params {
   $cmd_preexec            = undef
   $du_args                = '-csh'
   $link_dest              = 1
-  $log_level              = 5
+  $log_level              = 'warning'
   $no_create_root         = 0
   $one_fs                 = undef
   $push_ssh_key           = true

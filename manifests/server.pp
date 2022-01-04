@@ -77,7 +77,7 @@ class rsnapshot::server(
     du_args                => $::rsnapshot::server::du_args,
     link_dest              => $::rsnapshot::server::link_dest,
     lock_path              => $::rsnapshot::server::lock_path,
-    loglevel               => $::rsnapshot::server::loglevel,
+    loglevel               => $::rsnapshot::server::log_level,
     log_path               => $::rsnapshot::server::log_path,
     no_create_root         => $::rsnapshot::server::no_create_root,
     require                => File[$config_path],
