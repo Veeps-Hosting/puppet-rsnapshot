@@ -18,7 +18,7 @@ define rsnapshot::server::config (
   $includes               = {},
   $link_dest              = $rsnapshot::params::link_dest,
   $lock_path              = $rsnapshot::params::lock_path,
-  $log_level              = $rsnapshot::params::log_level,
+  $log_level              = 5,
   $log_path               = $rsnapshot::params::server_log_path,
   $no_create_root         = $rsnapshot::params::no_create_root,
   $one_fs                 = $rsnapshot::params::one_fs,
