@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+# Release 2.1.8
+* Minor fix to ensure different types of backups (daily, weekly, monthly) don't interfere with each other, by adding a retry loop in BASH. Add new Ubuntu LTS support.
+
 # Release 2.1.6
 * Minor bugfix to Client config log_level (5=warning)
 

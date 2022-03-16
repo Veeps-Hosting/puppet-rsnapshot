@@ -1,12 +1,29 @@
 #!/bin/bash
 
+RETRY_MINS="3600 minute"
+RETRY_STOP=$(date -d "$RETRY_MINS" +%s)
+RETRY_EVERY=60
+
+until `ps -C rsnapshot >/dev/null && echo "false" || echo "true"`
+do
+  echo 1>&2 Process rsnapshot is still running... retrying after $RETRY_EVERY seconds - `date`
+  sleep $RETRY_EVERY
+
+  now=$(date +%s)
+  if [ $now -ge $RETRY_STOP ]
+  then
+    1>&2 echo rsnapshot still running after $RETRY_MINS
+    exit 1
+  fi
+done
+
 ## Enumerate all config files to iterate over
-ls -l <%= @server_config_path %>/*.conf | awk {'print $9'} > <%= @script_path %>/.rsnapshot
+ls -l /etc/rsnapshot/*.conf | awk {'print $9'} > /etc/rsnapshot/scripts/.rsnapshot
 
 ## Run backups 1 config file at a time
 while read config; do
   rsnapshot -c $config $1
-done <<%= @script_path %>/.rsnapshot
+done </etc/rsnapshot/scripts/.rsnapshot
 
 ## Remove the list of config files
-rm -f <%= @script_path %>/.rsnapshot
+rm -f /etc/rsnapshot/scripts/.rsnapshot
