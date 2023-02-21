@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+# Releast 2.1.9
+* Change ssh_args to work as part of the options, instead of as an "rsync -e 'ssh <do something' arguement>'", which didn't seem to work as expected
+* Ubuntu 22.04 compatibility tested and added
+
 # Release 2.1.8
 * Minor fix to ensure different types of backups (daily, weekly, monthly) don't interfere with each other, by adding a retry loop in BASH. Add new Ubuntu LTS support.
 

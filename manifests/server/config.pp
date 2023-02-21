@@ -56,12 +56,6 @@ define rsnapshot::server::config (
   $config_file = "${config_path_norm}/${name}-rsnapshot.conf"
   $snapshot_root = "${backup_path_norm}/${name}"
 
-  if($ssh_args) {
-    $ssh_args_processed = "-e 'ssh ${ssh_args}'"
-  } else {
-    $ssh_args_processed = ''
-  }
-
   if($use_sudo) {
     $rsync_wrapper_processed = "--rsync-path=\"${wrapper_path_norm}/${wrapper_sudo}\""
   } else {
@@ -112,6 +106,7 @@ define rsnapshot::server::config (
     rsync_long_args        => $rsync_long_args_final,
     rsync_numtries         => $rsync_numtries,
     rsync_short_args       => $rsync_short_args,
+    ssh_args               => $ssh_args,
     stop_on_stale_lockfile => $stop_on_stale_lockfile,
     sync_first             => $sync_first,
     use_lazy_deletes       => $use_lazy_deletes,
