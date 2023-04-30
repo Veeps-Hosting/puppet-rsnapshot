@@ -3,6 +3,7 @@
 class rsnapshot::server(
   $backup_path            = $rsnapshot::params::server_backup_path,
   $config_path            = $rsnapshot::params::server_config_path,
+  $client_user            = $rsnapshot::params::client_user,
   $du_args                = $rsnapshot::params::du_args,
   $link_dest              = $rsnapshot::params::link_dest,
   $lock_path              = $rsnapshot::params::lock_path,
@@ -88,5 +89,16 @@ class rsnapshot::server(
     use_lazy_deletes       => $::rsnapshot::server::use_lazy_deletes,
     verbose                => $::rsnapshot::server::verbose,
   }
+
+  ## Export rsnapshot server values for client trust
+  $authorized_key = @(EOF)
+  command="/opt/rsnapshot_wrappers/rsync_sudo.sh",no-port-forwarding,no-agent-forwarding,no-X11-forwarding,no-pty,from="<%= @facts['networking']['ip'] %>,<%= @facts['networking']['fqdn'] %>" <%= @facts['sshpubkey_root'] %>
+  | EOF
+  @@concat::fragment { "${facts['networking']['fqdn']}__pubkey":
+    target  => "/home/${client_user}/.ssh/authorized_keys",
+    content => inline_template($authorized_key),
+    tag     => "${facts['networking']['fqdn']}_rsnapshot_server_key",
+  }
+
 
 }

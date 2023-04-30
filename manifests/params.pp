@@ -17,6 +17,7 @@ class rsnapshot::params {
   $no_create_root         = 0
   $one_fs                 = undef
   $push_ssh_key           = true
+  $purge_ssh_keys         = false
   $retain_daily           = 14
   $retain_hourly          = undef
   $retain_monthly         = 2

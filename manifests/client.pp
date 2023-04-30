@@ -25,6 +25,7 @@ class rsnapshot::client (
   $includes             = {},
   $one_fs               = $rsnapshot::params::one_fs,
   $push_ssh_key         = $rsnapshot::params::push_ssh_key,
+  $purge_ssh_keys       = $rsnapshot::params::purge_ssh_keys,
   $retain_daily         = $rsnapshot::params::retain_daily,
   $retain_hourly        = $rsnapshot::params::retain_hourly,
   $retain_monthly       = $rsnapshot::params::retain_monthly,
@@ -44,13 +45,14 @@ class rsnapshot::client (
 
   # Add User
   class { 'rsnapshot::client::user' :
-    client_user  => $client_user,
-    push_ssh_key => $push_ssh_key,
-    server       => $server,
-    server_user  => $server_user,
-    setup_sudo   => $setup_sudo,
-    use_sudo     => $use_sudo,
-    wrapper_path => $wrapper_path_normalized,
+    client_user    => $client_user,
+    push_ssh_key   => $push_ssh_key,
+    purge_ssh_keys => $purge_ssh_keys, 
+    server         => $server,
+    server_user    => $server_user,
+    setup_sudo     => $setup_sudo,
+    use_sudo       => $use_sudo,
+    wrapper_path   => $wrapper_path_normalized,
   }
 
   # Add Wrapper Scripts

@@ -2,6 +2,7 @@
 class rsnapshot::client::user (
   $client_user          = '',
   $push_ssh_key         = true,
+  $purge_ssh_keys       = false,
   $server               = '',
   $server_user          = '',
   $setup_sudo           = true,
@@ -20,45 +21,34 @@ class rsnapshot::client::user (
     $allowed_command = "${wrapper_path_norm}/${wrapper_rsync_ssh}"
   }
 
-  # Setup Group
+  ## Setup Group
   group { $client_user :
     ensure => present,
     before => User[$client_user],
   }
 
-  # Setup User
+  ## Setup User
   user { $client_user :
     ensure         => present,
     gid            => $client_user,
     home           => "/home/${client_user}",
     managehome     => true,
-    purge_ssh_keys => true,
+    purge_ssh_keys => $purge_ssh_keys,
     shell          => '/bin/bash',
   }
 
-  ## Get Key for remote backup user
-  if $push_ssh_key {
-    $backup_server_ip     = inline_template("<%= Addrinfo.getaddrinfo('${server}', 'ssh', nil, :STREAM).first.ip_address %>")
-    $server_user_exploded = "${server_user}@${server}"
-
-    sshkeys::set_authorized_key { "${server_user_exploded} to ${client_user}":
-      local_user  => $client_user,
-      options     => [
-        "command=\"${allowed_command}\"",
-        'no-port-forwarding',
-        'no-agent-forwarding',
-        'no-X11-forwarding',
-        'no-pty',
-        "from=\"${backup_server_ip},${server}\""
-      ],
-      remote_user => $server_user_exploded,
-      require     => User[$client_user],
-      target      => "/home/${client_user}/.ssh/authorized_keys",
-
+  ## Setup a public key trust from the rsnapshot servers root user
+  if $push_ssh_key == true {
+    concat {"/home/${client_user}/.ssh/authorized_keys":
+      ensure => present,
+      mode   => '0600',
+      owner  => $client_user,
+      group  => $client_user,
     }
+    Concat::Fragment <<|tag=="${server}_rsnapshot_server_key"|>>
   }
 
-  # Add sudo config if needed.
+  ## Add sudo config if needed.
   if $use_sudo and $setup_sudo {
     sudo::conf { 'backup_user':
       content  => "${client_user} ALL= NOPASSWD: ${wrapper_path}/rsync_sender.sh",
