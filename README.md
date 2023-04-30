@@ -31,7 +31,7 @@ This module manages backups using rsnapshot automatically.
 ## Module Description
 
 This module is a fork of tedivm/rsnapshot, and has many enhancements, including:
-* Puppet 6+ Compatable
+* Puppet 7 Compatible
 * Tested on all major/modern Debian and Red Hat derivatives
 * Fully automatic, including root user SSH key generation
 * 1 parameter required for clients: backup server FQDN
@@ -76,7 +76,7 @@ Defaults to 10pm nightly, Sunday 10am for weekly and the first of the month at 8
 
 * **Support for automatic key sharing.** The client machine will automatically
   receive the ssh key from the server and user that it is backing up to.
-  Leveraging the 'saz-ssh' module with default 'storeconfigs' enabled.
+  This uses concat and the facter fact for sshkeys from jtopjian-sshkeys module.
 
 * **Locked down ssh accounts.** All ssh accounts are locked down. SSH keys can
   only by used by the single backup host, without access to unneeded features

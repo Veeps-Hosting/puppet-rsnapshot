@@ -1,7 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-# Releast 2.1.9
+# Release 2.2.0
+* Remove dependency on jtopjian-sshkeys module for public key transfer from server to client. The deprecated sshkeys module relies on dalen-puppetdbquery, and both os these modules seem to be abandon-ware, no updates for 7+ years. The puppetdbquery module doesn't work correctly with puppetserver8, so this functionality was migrated to use concat fragments instead. Both modules can be safely removed from your repos if nothing else depends on them.
+* Added a new parameter ''$purge_ssh_keys' to manage the purging of ssh keys upon user creation and management - required to make the above concat fragments work correctly.
+* Bumped Puppet requirement to 7 to remain on supported versions, legacy versions such as 5 and 6 will likely still work fine.
+
+
+# Release 2.1.9
 * Change ssh_args to work as part of the options, instead of as an "rsync -e 'ssh <do something' arguement>'", which didn't seem to work as expected
 * Ubuntu 22.04 compatibility tested and added
 
