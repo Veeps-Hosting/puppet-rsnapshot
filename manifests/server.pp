@@ -1,21 +1,23 @@
 # == Class: rsnapshot
 
 class rsnapshot::server(
-  $backup_path            = $rsnapshot::params::server_backup_path,
-  $config_path            = $rsnapshot::params::server_config_path,
-  $client_user            = $rsnapshot::params::client_user,
-  $du_args                = $rsnapshot::params::du_args,
-  $link_dest              = $rsnapshot::params::link_dest,
-  $lock_path              = $rsnapshot::params::lock_path,
-  $log_level              = $rsnapshot::params::log_level,
-  $log_path               = $rsnapshot::params::server_log_path,
-  $no_create_root         = $rsnapshot::params::no_create_root,
-  $rsync_numtries         = $rsnapshot::params::rsync_numtries,
-  $server_user            = $rsnapshot::params::server_user,
-  $stop_on_stale_lockfile = $rsnapshot::params::stop_on_stale_lockfile,
-  $sync_first             = $rsnapshot::params::sync_first,
-  $use_lazy_deletes       = $rsnapshot::params::use_lazy_deletes,
-  $verbose                = $rsnapshot::params::verbose,
+  $backup_path                                       = $rsnapshot::params::server_backup_path,
+  $config_path                                       = $rsnapshot::params::server_config_path,
+  $client_user                                       = $rsnapshot::params::client_user,
+  $du_args                                           = $rsnapshot::params::du_args,
+  $link_dest                                         = $rsnapshot::params::link_dest,
+  $lock_path                                         = $rsnapshot::params::lock_path,
+  $log_level                                         = $rsnapshot::params::log_level,
+  $log_path                                          = $rsnapshot::params::server_log_path,
+  $no_create_root                                    = $rsnapshot::params::no_create_root,
+  Variant[String, Enum['linux','windows']] $platform = 'linux',
+  $rsync_numtries                                    = $rsnapshot::params::rsync_numtries,
+  $server_user                                       = $rsnapshot::params::server_user,
+  $stop_on_stale_lockfile                            = $rsnapshot::params::stop_on_stale_lockfile,
+  $sync_first                                        = $rsnapshot::params::sync_first,
+  $target                                            = "/home/${client_user}/.ssh/authorized_keys",
+  $use_lazy_deletes                                  = $rsnapshot::params::use_lazy_deletes,
+  $verbose                                           = $rsnapshot::params::verbose,
 ) inherits rsnapshot::params {
 
   include rsnapshot::server::install
@@ -91,11 +93,17 @@ class rsnapshot::server(
   }
 
   ## Export rsnapshot server values for client trust
-  $authorized_key = @(EOF)
-  command="/opt/rsnapshot_wrappers/rsync_sudo.sh",no-port-forwarding,no-agent-forwarding,no-X11-forwarding,no-pty,from="<%= @facts['networking']['ip'] %>,<%= @facts['networking']['fqdn'] %>" <%= @facts['sshpubkey_root'] %>
-  | EOF
-  @@concat::fragment { "${facts['networking']['fqdn']}__pubkey":
-    target  => "/home/${client_user}/.ssh/authorized_keys",
+  if $platform == 'linux' {
+    $authorized_key = @(EOF)
+    command="/opt/rsnapshot_wrappers/rsync_sudo.sh",no-port-forwarding,no-agent-forwarding,no-X11-forwarding,no-pty,from="<%= @facts['ec2_metadata']['public-ipv4'] %>,<%= @facts['networking']['fqdn'] %>" <%= @facts['sshpubkey_root'] %>
+    | EOF
+  } elsif $platform == 'windows' {
+    $authorized_key = @(EOF)
+    <%= @facts['sshpubkey_root'] %>
+    | EOF
+  }
+  @@concat::fragment { "${facts['networking']['fqdn']}_pubkey":
+    target  => $target,
     content => inline_template($authorized_key),
     tag     => "${facts['networking']['fqdn']}_rsnapshot_server_key",
   }
