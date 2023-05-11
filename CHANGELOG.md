@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+# Release 2.2.2
+* Minor bugfix, externally manage the service account .ssh dir before concat the pubkey
+
 # Release 2.2.1
 * Minor maintenance release, 2 new parameters in server.pp to allow an Rsnapshot server to backup Windows nodes.
 Hiera example:

@@ -36,14 +36,22 @@ class rsnapshot::client::user (
     purge_ssh_keys => $purge_ssh_keys,
     shell          => '/bin/bash',
   }
+  file { "/home/${client_user}/.ssh":
+    ensure  => directory,
+    group   => $client_user,
+    mode    => '0700',
+    owner   => $client_user,
+    require => User[$client_user],
+  }
 
   ## Setup a public key trust from the rsnapshot servers root user
   if $push_ssh_key == true {
     concat {"/home/${client_user}/.ssh/authorized_keys":
-      ensure => present,
-      mode   => '0600',
-      owner  => $client_user,
-      group  => $client_user,
+      ensure  => present,
+      mode    => '0600',
+      owner   => $client_user,
+      group   => $client_user,
+      require => File["/home/${client_user}/.ssh"],
     }
     Concat::Fragment <<|tag=="${server}_rsnapshot_server_key"|>>
   }
