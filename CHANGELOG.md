@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+# Release 2.2.3
+* Additional bugfix for later Puppet 8 ruby interpreters: https://stackoverflow.com/questions/14351272/undefined-method-exists-for-fileclass-nomethoderror
+
 # Release 2.2.0
 * Remove dependency on jtopjian-sshkeys module for public key transfer from server to client. The deprecated sshkeys module relies on dalen-puppetdbquery, and both os these modules seem to be abandon-ware, no updates for 7+ years. The puppetdbquery module doesn't work correctly with puppetserver8, so this functionality was migrated to use concat fragments instead. Both modules can be safely removed from your repos if nothing else depends on them.
 * Added a new parameter ''$purge_ssh_keys' to manage the purging of ssh keys upon user creation and management - required to make the above concat fragments work correctly.
