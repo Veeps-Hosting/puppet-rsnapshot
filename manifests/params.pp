@@ -43,7 +43,7 @@ class rsnapshot::params {
   $wrapper_rsync_ssh      = 'rsync_ssh.sh'
   $wrapper_sudo           = 'rsync_sudo.sh'
 
-  case $::osfamily {
+  case "${facts[os][family]}" {
     debian: {
       $cmd_client_rsync       = '/usr/bin/rsync'
       $cmd_client_sudo        = '/usr/bin/sudo'
