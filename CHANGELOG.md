@@ -1,15 +1,6 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-# Release 2.2.2
-* Minor bugfix, externally manage the service account .ssh dir before concat the pubkey
-
-# Release 2.2.1
-* Minor maintenance release, 2 new parameters in server.pp to allow an Rsnapshot server to backup Windows nodes.
-Hiera example:
-rsnapshot::server::platform: 'windows'
-rsnapshot::server::target: 'C:/ProgramData/ssh/administrators_authorized_keys'
-
 # Release 2.2.0
 * Remove dependency on jtopjian-sshkeys module for public key transfer from server to client. The deprecated sshkeys module relies on dalen-puppetdbquery, and both os these modules seem to be abandon-ware, no updates for 7+ years. The puppetdbquery module doesn't work correctly with puppetserver8, so this functionality was migrated to use concat fragments instead. Both modules can be safely removed from your repos if nothing else depends on them.
 * Added a new parameter ''$purge_ssh_keys' to manage the purging of ssh keys upon user creation and management - required to make the above concat fragments work correctly.

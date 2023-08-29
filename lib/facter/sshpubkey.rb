@@ -24,9 +24,9 @@ if homedir_users != nil and homedir_users.size > 0
       homedir = pw.dir
       key = false
 
-      if File.exists?("#{homedir}/.ssh/id_rsa.pub")
+      if File.exist?("#{homedir}/.ssh/id_rsa.pub")
         key = IO.read("#{homedir}/.ssh/id_rsa.pub")
-      elsif File.exists?("#{homedir}/.ssh/id_dsa.pub")
+      elsif File.exist?("#{homedir}/.ssh/id_dsa.pub")
         key = IO.read("#{homedir}/.ssh/id_dsa.pub")
       end
       if key
@@ -42,9 +42,9 @@ else
     homedir = pw.dir
     key = false
 
-    if File.exists?("#{homedir}/.ssh/id_rsa.pub")
+    if File.exist?("#{homedir}/.ssh/id_rsa.pub")
       key = IO.read("#{homedir}/.ssh/id_rsa.pub")
-    elsif File.exists?("#{homedir}/.ssh/id_dsa.pub")
+    elsif File.exist?("#{homedir}/.ssh/id_dsa.pub")
       key = IO.read("#{homedir}/.ssh/id_dsa.pub")
     end
 
