@@ -44,7 +44,7 @@ define rsnapshot::server::config (
   $wrapper_sudo           = $rsnapshot::params::wrapper_sudo,
 ){
 
-  # Remove trailing slashes.
+  ## Remove trailing slashes.
   $log_path_norm = regsubst($log_path, '\/$', '')
   $lock_path_norm = regsubst($lock_path, '\/$', '')
   $config_path_norm = regsubst($config_path, '\/$', '')
@@ -116,7 +116,7 @@ define rsnapshot::server::config (
   $lockfile = "${rsnapshot::server::lock_path}${name}"
   $logfile  = "${rsnapshot::server::log_path}${name}"
 
-  # config file
+  ## config file
   concat { $config_file :
     group => $server_user,
     mode  => '0644',
