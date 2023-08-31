@@ -65,7 +65,7 @@ class rsnapshot::client (
   }
 
   # Export client object to get picked up by the server.
-  @@rsnapshot::server::config { $::fqdn:
+  @@rsnapshot::server::config { "${facts[networking][fqdn]}":
     backup_hourly_cron  => $backup_hourly_cron,
     backup_time_dom     => $backup_time_dom,
     backup_time_hour    => $backup_time_hour,

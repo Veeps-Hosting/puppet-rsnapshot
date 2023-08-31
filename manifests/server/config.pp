@@ -30,7 +30,7 @@ define rsnapshot::server::config (
   $rsync_numtries         = $rsnapshot::params::rsync_numtries,
   $rsync_short_args       = $rsnapshot::params::rsync_short_args,
   $rsync_wrapper          = true,
-  $server                 = $::fqdn,
+  $server                 = "${facts['networking']['fqdn']}",
   $server_user            = $rsnapshot::params::server_user,
   $ssh_args               = $rsnapshot::params::ssh_args,
   $stop_on_stale_lockfile = $rsnapshot::params::stop_on_stale_lockfile,
@@ -63,9 +63,9 @@ define rsnapshot::server::config (
   }
 
   if($rsync_wrapper) {
-    $rsync_long_args_final = strip("${ssh_args_processed} ${rsync_long_args} ${rsync_wrapper_processed}")
+    $rsync_long_args_final = strip("${rsync_long_args} ${rsync_wrapper_processed}")
   } else {
-    $rsync_long_args_final = strip("${ssh_args_processed} ${rsync_long_args}")
+    $rsync_long_args_final = strip("${rsync_long_args}")
   }
 
   file { $snapshot_root :

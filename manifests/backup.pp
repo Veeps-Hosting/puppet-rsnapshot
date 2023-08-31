@@ -1,7 +1,7 @@
 # This class defines the rsnapshot::backup
 define rsnapshot::backup (
   $source_path,
-  $host   = $::fqdn,
+  $host    = "${facts['networking']['fqdn']}",
   $options = {},
 ){
   @@rsnapshot::server::backup_config { "${host}_${source_path}":

@@ -74,7 +74,7 @@ class rsnapshot::server(
     owner  => $server_user,
   }
 
-  Rsnapshot::Server::Config <<| server == $::fqdn |>> {
+  Rsnapshot::Server::Config <<| server == "${facts['networking']['fqdn']}" |>> {
     backup_path            => $::rsnapshot::server::backup_path,
     config_path            => $::rsnapshot::server::config_path,
     du_args                => $::rsnapshot::server::du_args,
