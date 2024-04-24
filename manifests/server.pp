@@ -33,6 +33,7 @@ class rsnapshot::server(
   $rsnapshot_logrotate = @(EOF)
   <%= @log_path %>/*.log {
     compress
+    delaycompress
     missingok
     monthly
     rotate 3
