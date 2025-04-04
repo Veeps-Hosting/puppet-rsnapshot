@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+# Release 2.3.0
+* Dependency bump to remove vulnerable toolchain component
+* Minor logging change to support monitoring plugins (contributor: napsty)
+
 # Release 2.2.4-2.2.1
 * Additional bugfixes for later Puppet 8 ruby interpreters: https://stackoverflow.com/questions/14351272/undefined-method-exists-for-fileclass-nomethoderror
 

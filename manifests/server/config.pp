@@ -9,6 +9,7 @@ define rsnapshot::server::config (
   $cmd_postexec           = $rsnapshot::params::cmd_postexec,
   $cmd_preexec            = $rsnapshot::params::cmd_preexec,
   $config_path            = $rsnapshot::params::server_config_path,
+  $connect_endpoint       = $rsnapshot::params::connect_endpoint,
   $directories            = {},
   $du_args                = $rsnapshot::params::du_args,
   $exclude_files          = {},

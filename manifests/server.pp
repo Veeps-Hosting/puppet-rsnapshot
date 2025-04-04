@@ -5,6 +5,7 @@ class rsnapshot::server(
   $config_path                                       = $rsnapshot::params::server_config_path,
   $client_user                                       = $rsnapshot::params::client_user,
   $du_args                                           = $rsnapshot::params::du_args,
+  String $from                                       = "${facts['networking']['ip']},${facts['networking']['fqdn']}",
   $link_dest                                         = $rsnapshot::params::link_dest,
   $lock_path                                         = $rsnapshot::params::lock_path,
   $log_level                                         = $rsnapshot::params::log_level,
@@ -96,7 +97,7 @@ class rsnapshot::server(
   ## Export rsnapshot server values for client trust
   if $platform == 'linux' {
     $authorized_key = @(EOF)
-    command="/opt/rsnapshot_wrappers/rsync_sudo.sh",no-port-forwarding,no-agent-forwarding,no-X11-forwarding,no-pty,from="<%= @facts['ec2_metadata']['public-ipv4'] %>,<%= @facts['networking']['fqdn'] %>" <%= @facts['sshpubkey_root'] %>
+    command="/opt/rsnapshot_wrappers/rsync_sudo.sh",no-port-forwarding,no-agent-forwarding,no-X11-forwarding,no-pty,from="<%= @from %>" <%= @facts['sshpubkey_root'] %>
     | EOF
   } elsif $platform == 'windows' {
     $authorized_key = @(EOF)
@@ -108,6 +109,5 @@ class rsnapshot::server(
     content => inline_template($authorized_key),
     tag     => "${facts['networking']['fqdn']}_rsnapshot_server_key",
   }
-
 
 }

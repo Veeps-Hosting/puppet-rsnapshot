@@ -11,6 +11,7 @@ class rsnapshot::params {
   $client_user            = 'rsnapshot'
   $cmd_postexec           = undef
   $cmd_preexec            = undef
+  $connect_endpoint       = $facts['networking']['fqdn']
   $du_args                = '-csh'
   $link_dest              = 1
   $log_level              = 'warning'
