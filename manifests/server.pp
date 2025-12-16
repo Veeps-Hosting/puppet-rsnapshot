@@ -10,6 +10,7 @@ class rsnapshot::server(
   $lock_path                                         = $rsnapshot::params::lock_path,
   $log_level                                         = $rsnapshot::params::log_level,
   $log_path                                          = $rsnapshot::params::server_log_path,
+  $manual_mode                                       = $rsnapshot::params::manual_mode,
   $no_create_root                                    = $rsnapshot::params::no_create_root,
   Variant[String, Enum['linux','windows']] $platform = 'linux',
   $rsync_numtries                                    = $rsnapshot::params::rsync_numtries,
@@ -50,7 +51,8 @@ class rsnapshot::server(
     replace => true,
   }
 
-  file { '/etc/cron.daily/logrotate': ensure => absent}
+  # conflicts with another module
+  #file { '/etc/cron.daily/logrotate': ensure => absent}
 
 
   # Add logging folder
@@ -76,22 +78,74 @@ class rsnapshot::server(
     owner  => $server_user,
   }
 
-  Rsnapshot::Server::Config <<| server == "${facts['networking']['fqdn']}" |>> {
-    backup_path            => $::rsnapshot::server::backup_path,
-    config_path            => $::rsnapshot::server::config_path,
-    du_args                => $::rsnapshot::server::du_args,
-    link_dest              => $::rsnapshot::server::link_dest,
-    lock_path              => $::rsnapshot::server::lock_path,
-    loglevel               => $::rsnapshot::server::log_level,
-    log_path               => $::rsnapshot::server::log_path,
-    no_create_root         => $::rsnapshot::server::no_create_root,
-    require                => File[$config_path],
-    rsync_numtries         => $::rsnapshot::server::rsync_numtries,
-    server_user            => $server_user,
-    stop_on_stale_lockfile => $::rsnapshot::server::stop_on_stale_lockfile,
-    sync_first             => $::rsnapshot::server::sync_first,
-    use_lazy_deletes       => $::rsnapshot::server::use_lazy_deletes,
-    verbose                => $::rsnapshot::server::verbose,
+  # manual_mode: avoid use of PuppetDB and storeconfigs
+  if $manual_mode {
+    $client_settings = lookup('rsnapshot::server::config',Hash,hash,{})
+    $client_settings.keys.each |$item| {
+      $defaults = {
+        backup_path             => $rsnapshot::server::backup_path,
+        config_path             => $rsnapshot::server::config_path,
+        du_args                 => $rsnapshot::server::du_args,
+        link_dest               => $rsnapshot::server::link_dest,
+        lock_path               => $rsnapshot::server::lock_path,
+        loglevel                => $rsnapshot::server::log_level,
+        log_path                => $rsnapshot::server::log_path,
+        no_create_root          => $rsnapshot::server::no_create_root,
+        require                 => File[$config_path],
+        rsync_numtries          => $rsnapshot::server::rsync_numtries,
+        server_user             => $server_user,
+        stop_on_stale_lockfile  => $rsnapshot::server::stop_on_stale_lockfile,
+        sync_first              => $rsnapshot::server::sync_first,
+        use_lazy_deletes        => $rsnapshot::server::use_lazy_deletes,
+        verbose                 => $rsnapshot::server::verbose,
+        backup_hourly_cron      => $rsnapshot::server::backup_hourly_cron,
+        backup_time_dom         => $rsnapshot::server::backup_time_dom,
+        backup_time_hour        => $rsnapshot::server::backup_time_hour,
+        backup_time_minute      => $rsnapshot::server::backup_time_minute,
+        backup_time_weekday     => $rsnapshot::server::backup_time_weekday,
+        client_user             => $rsnapshot::server::client_user,
+        cmd_postexec            => $rsnapshot::server::cmd_postexec,
+        cmd_preexec             => $rsnapshot::server::cmd_preexec,
+        connect_endpoint        => $item,
+        directories             => $rsnapshot::server::directories,
+        exclude_files           => [],
+        excludes                => [],
+        include_files           => [],
+        includes                => [],
+        one_fs                  => $rsnapshot::server::one_fs,
+        retain_daily            => $rsnapshot::server::retain_daily,
+        retain_hourly           => $rsnapshot::server::retain_hourly,
+        retain_monthly          => $rsnapshot::server::retain_monthly,
+        retain_weekly           => $rsnapshot::server::retain_weekly,
+        rsync_long_args         => $rsnapshot::server::rsync_long_args,
+        rsync_short_args        => $rsnapshot::server::rsync_short_args,
+        server                  => "${facts['networking']['fqdn']}",
+        ssh_args                => $rsnapshot::server::ssh_args,
+        use_sudo                => $rsnapshot::server::use_sudo,
+        wrapper_path            => $rsnapshot::params::wrapper_path,
+      }
+      Rsnapshot::Server::Config { $item:
+        * => ($defaults + $client_settings[$item]),
+      }
+    }
+  } else {
+    Rsnapshot::Server::Config <<| server == "${facts['networking']['fqdn']}" |>> {
+      backup_path            => $::rsnapshot::server::backup_path,
+      config_path            => $::rsnapshot::server::config_path,
+      du_args                => $::rsnapshot::server::du_args,
+      link_dest              => $::rsnapshot::server::link_dest,
+      lock_path              => $::rsnapshot::server::lock_path,
+      loglevel               => $::rsnapshot::server::log_level,
+      log_path               => $::rsnapshot::server::log_path,
+      no_create_root         => $::rsnapshot::server::no_create_root,
+      require                => File[$config_path],
+      rsync_numtries         => $::rsnapshot::server::rsync_numtries,
+      server_user            => $server_user,
+      stop_on_stale_lockfile => $::rsnapshot::server::stop_on_stale_lockfile,
+      sync_first             => $::rsnapshot::server::sync_first,
+      use_lazy_deletes       => $::rsnapshot::server::use_lazy_deletes,
+      verbose                => $::rsnapshot::server::verbose,
+    }
   }
 
   ## Export rsnapshot server values for client trust

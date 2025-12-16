@@ -1,9 +1,11 @@
 # Defined class rsnapshot::client::user
 class rsnapshot::client::user (
   $client_user          = '',
+  $manual_mode          = $rsnapshot::params::manual_mode,
   $push_ssh_key         = true,
   $purge_ssh_keys       = false,
   $server               = '',
+  $server_rsnapshot_key = $rsnapshot::params::server_rsnapshot_key,
   $server_user          = '',
   $setup_sudo           = true,
   $use_sudo             = true,
@@ -53,7 +55,15 @@ class rsnapshot::client::user (
       group   => $client_user,
       require => File["/home/${client_user}/.ssh"],
     }
-    Concat::Fragment <<|tag=="${server}_rsnapshot_server_key"|>>
+    # manual mode: read hiera instead of facts
+    if $manual_mode {
+      Concat::Fragment { "${server}_pubkey":
+        target  => "/home/${client_user}/.ssh/authorized_keys",
+        content => "${server_rsnapshot_key}",
+      }
+    } else {
+      Concat::Fragment <<|tag=="${server}_rsnapshot_server_key"|>>
+    }
   }
 
   ## Add sudo config if needed.

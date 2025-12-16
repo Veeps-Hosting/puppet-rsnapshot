@@ -41,6 +41,8 @@ This module is a fork of tedivm/rsnapshot, and has many enhancements, including:
 
 Working Puppet Master and PuppetDB assumed for all automated functionality.
 
+Manual mode allows simple configuration of clients and servers without need of PuppetDB.
+
 > rsnapshot is a filesystem snapshot utility based on rsync. rsnapshot makes it
 easy to make periodic snapshots of local machines, and remote machines over ssh.
 The code makes extensive use of hard links whenever possible, to greatly reduce
@@ -112,6 +114,8 @@ Defaults to 10pm nightly, Sunday 10am for weekly and the first of the month at 8
   to be installed on the backup server.
 * Multiple puppet runs (client, then server, then client again) need to occur
   for all resources to be created on both servers.
+* Manual mode requires neither PuppetDB nor Storeconfigs, but SSH keys must be
+  configured manually and client configs must be created for the server manually.
 
 ### Beginning with rsnapshot
 
@@ -161,6 +165,27 @@ class { 'rsnapshot::server':
 }
 ```
 
+For 'manual mode', set `manual_mode => true` and add client definitions:
+
+```
+rsnapshot::server::config { '<fqdn.of.client.host>':
+ directories => [
+  '/etc',
+  '/home',
+ ],
+}
+```
+
+In hiera this looks like:
+
+```
+rsnapshot::server::manual_mode: true
+rsnapshot::server::config:
+ 'fqdn.of.client.host':
+  directories:
+   - '/home'
+   - '/root'
+```
 
 ### Configuring the Client
 
@@ -207,6 +232,12 @@ class { 'rsnapshot::client':
   push_ssh_key        => true,
   wrapper_path        => '/opt/rsnapshot_wrappers/',
 }
+```
+
+For manual mode, set `manual_mode => true` and add a value for the server key:
+
+```
+server_rsnapshot_key => 'command="/opt/rsnapshot_wrappers/rsync_sudo.sh",no-port-forwarding,no-agent-forwarding,no-X11-forwarding,no-pty,from="<ip.of.your.server>" ssh-rsa <public key material>'
 ```
 
 # Back Up Pre and Post Actions

@@ -12,9 +12,11 @@ class rsnapshot::params {
   $cmd_postexec           = undef
   $cmd_preexec            = undef
   $connect_endpoint       = $facts['networking']['fqdn']
+  $directories            = ['/etc','/home','/root','/var/www','/opt/mysqldumps']
   $du_args                = '-csh'
   $link_dest              = 1
   $log_level              = 'warning'
+  $manual_mode            = false
   $no_create_root         = 0
   $one_fs                 = undef
   $push_ssh_key           = true
@@ -31,6 +33,7 @@ class rsnapshot::params {
   $server_config_path     = '/etc/rsnapshot'
   $server_log_path        = '/var/log/rsnapshot'
   $server_packages        = [ 'rsnapshot' ]
+  $server_rsnapshot_key   = undef
   $server_user            = 'root'
   $setup_sudo             = true
   $ssh_args               = undef
