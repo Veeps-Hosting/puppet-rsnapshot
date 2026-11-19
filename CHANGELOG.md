@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+# Release 2.4.0
+* New `connect_endpoint` parameter (client and server::config, default the client FQDN): the host the rsnapshot server connects to for each backup line.
+* New `from` parameter on rsnapshot::server (default "<ip>,<fqdn>"): the `from=` restriction on the exported client authorized_key. Replaces the ec2_metadata public-ipv4 fact, which is absent off EC2.
+* Fix the config.erb backup line (the unreleased master had a stray `,trim_mode: ""` that does not parse).
+* Widen dependency bounds: puppetlabs/concat < 11.0.0, saz/sudo < 11.0.0, saz/ssh < 16.0.0.
+* Add .pdkignore so the built tarball no longer ships .git and dev tooling.
+
 # Release 2.3.0
 * Dependency bump to remove vulnerable toolchain component
 * Minor logging change to support monitoring plugins (contributor: napsty)
