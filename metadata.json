@@ -1,6 +1,6 @@
 {
   "name": "veepshosting-rsnapshot",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "author": "grant-veepshosting",
   "summary": "Secure and easy backups with rsnapshot.",
   "license": "MIT",
@@ -10,15 +10,15 @@
   "dependencies": [
     {
       "name": "puppetlabs/concat",
-      "version_requirement": ">= 3.0.0 <= 9.9.9"
+      "version_requirement": ">= 3.0.0 < 11.0.0"
     },
     {
       "name": "saz/sudo",
-      "version_requirement": ">= 6.0.0 <= 9.9.9"
+      "version_requirement": ">= 6.0.0 < 11.0.0"
     },
     {
       "name": "saz/ssh",
-      "version_requirement": ">= 2.3.0  <= 9.9.9"
+      "version_requirement": ">= 2.3.0 < 16.0.0"
     }
   ],
   "operatingsystem_support": [
